@@ -193,6 +193,11 @@ export default function Home() {
                 <div className="space-y-4">
                   {Array.from(jobs.values())
                     .filter(job => job.status === 'completed')
+                    .sort((a, b) => {
+                      const aTime = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+                      const bTime = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+                      return bTime - aTime;
+                    })
                     .map((job) => (
                       <div key={job.jobId} className="border border-gray-200 rounded-lg bg-white shadow-sm">
                         <ResultsView job={job} />
