@@ -42,3 +42,4 @@ coverage/
 *.sqlite3
 *.db
 *.sql
+.DS_Store

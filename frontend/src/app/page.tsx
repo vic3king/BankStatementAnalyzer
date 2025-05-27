@@ -149,7 +149,7 @@ export default function Home() {
                   return (
                     <File
                       key={`${file.name}-${index}`}
-                      fileName={file.name}
+                      file={file}
                       job={job}
                       uploadStatus={file.uploadStatus}
                     />

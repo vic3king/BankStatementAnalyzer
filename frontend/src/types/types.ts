@@ -26,4 +26,5 @@ export interface FileWithProgress extends File {
   uploadProgress?: number;
   jobId?: string;
   uploadStatus?: "uploading" | "queued" | "processing" | "completed" | "failed";
+  originalFileName?: string;
 }

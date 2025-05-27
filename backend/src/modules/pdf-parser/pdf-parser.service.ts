@@ -1,7 +1,7 @@
-import { Injectable, Logger, Inject } from '@nestjs/common';
-import pdfParse from 'pdf-parse';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import * as pdfParse from 'pdf-parse';
 import { ParsedStatementDto } from './dto/parsed-statement.dto';
-import { LLMServiceInterface, LLM_SERVICE } from '../llm/llm.interface';
+import { LLM_SERVICE, LLMServiceInterface } from '../llm/llm.interface';
 import {
   BANK_STATEMENT_SYSTEM_INSTRUCTION,
   createBankStatementPrompt,
@@ -11,8 +11,32 @@ import {
   validateReconciliation,
 } from '../../common/utils';
 
-export interface ProgressCallback {
-  (progress: number, message?: string): Promise<void>;
+export type ProgressCallback = (
+  progress: number,
+  message: string,
+) => Promise<void>;
+
+/**
+ * Utility function to clean JSON response from LLM
+ * Removes markdown code blocks and extracts pure JSON
+ */
+function cleanJsonResponse(response: string): string {
+  if (!response) {
+    throw new Error('Empty response from LLM');
+  }
+
+  let cleaned = response.trim();
+  cleaned = cleaned.replace(/^```(?:json)?\s*\n?/i, '');
+  cleaned = cleaned.replace(/\n?\s*```\s*$/i, '');
+  cleaned = cleaned.trim();
+
+  if (!cleaned.startsWith('{') || !cleaned.endsWith('}')) {
+    throw new Error(
+      `Invalid JSON format in LLM response. Expected JSON object, got: ${cleaned.substring(0, 100)}...`,
+    );
+  }
+
+  return cleaned;
 }
 
 @Injectable()
@@ -23,33 +47,21 @@ export class PdfParserService {
     @Inject(LLM_SERVICE) private readonly llmService: LLMServiceInterface,
   ) {}
 
-  async extractTextFromPdf(
-    buffer: Buffer,
-    progressCallback?: ProgressCallback,
+  private async extractTextFromPdf(
+    pdfBuffer: Buffer,
+    progressCallback: ProgressCallback,
   ): Promise<string> {
-    try {
-      this.logger.log('Extracting text from PDF');
+    await progressCallback(25, 'Extracting text from PDF');
 
-      if (progressCallback) {
-        await progressCallback(25, 'Starting PDF text extraction');
-      }
+    const data = await pdfParse(pdfBuffer);
+    const text = data.text;
 
-      const data = await pdfParse(buffer);
-
-      if (progressCallback) {
-        await progressCallback(
-          35,
-          `PDF parsing completed: ${data.text.length} characters extracted`,
-        );
-      }
-
-      return data.text;
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      this.logger.error(`Failed to extract text from PDF: ${errorMessage}`);
-      throw new Error('Failed to parse PDF file');
+    if (!text || text.trim().length === 0) {
+      throw new Error('No text content found in PDF');
     }
+
+    await progressCallback(35, 'PDF text extraction completed');
+    return text;
   }
 
   async parseBankStatement(
@@ -74,9 +86,13 @@ export class PdfParserService {
         createBankStatementPrompt(pdfText),
       );
 
+      this.logger.debug('Raw LLM response:', response);
       await progressCallback(70, 'Processing LLM response');
 
-      const parsedResult = JSON.parse(response);
+      // Clean the JSON response to remove markdown code blocks, specifically for newer models
+      const cleanedResponse = cleanJsonResponse(response);
+
+      const parsedResult = JSON.parse(cleanedResponse);
 
       await progressCallback(75, 'Validating extracted data structure');
 
@@ -93,10 +109,20 @@ export class PdfParserService {
 
       return validatedResult;
     } catch (error) {
+      this.logger.error('Error parsing bank statement:', error);
+
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      this.logger.error(`Failed to parse bank statement: ${errorMessage}`);
-      throw new Error('Failed to parse bank statement');
+
+      if (errorMessage.includes('Invalid JSON format')) {
+        throw new Error(`LLM returned invalid JSON format: ${errorMessage}`);
+      } else if (errorMessage.includes('Unexpected token')) {
+        throw new Error(
+          `Failed to parse LLM response as JSON: ${errorMessage}`,
+        );
+      }
+
+      throw new Error(`Failed to parse bank statement: ${errorMessage}`);
     }
   }
 }

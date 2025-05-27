@@ -16,6 +16,8 @@ const ResultsView = ({ job }: ResultsViewProps) => {
   const formatCurrency = (amount: number) => `£${Math.abs(amount).toFixed(2)}`;
   const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString();
 
+  const displayFileName = job.fileName || "Unknown file";
+
   return (
     <div>
       {/* Clickable File Header */}
@@ -28,8 +30,8 @@ const ResultsView = ({ job }: ResultsViewProps) => {
             <FaRegFileAlt className="text-green-600" />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-gray-900" title={job.fileName}>
-              {truncateFileName(job.fileName, 40)}
+            <p className="font-medium text-gray-900" title={displayFileName}>
+              {truncateFileName(displayFileName, 40)}
             </p>
             <p className="text-sm text-green-600 flex items-center gap-1">
               <FaCheckCircle className="w-3 h-3" />
@@ -81,11 +83,6 @@ const ResultsView = ({ job }: ResultsViewProps) => {
                   <div className="space-y-1">
                     <p className="text-sm">Start: <span className="font-semibold">{formatCurrency(result.startBalance)}</span></p>
                     <p className="text-sm">End: <span className="font-semibold">{formatCurrency(result.endBalance)}</span></p>
-                    <p className="text-sm">
-                      Change: <span className={`font-semibold ${result.endBalance - result.startBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {result.endBalance - result.startBalance >= 0 ? '+' : ''}{formatCurrency(result.endBalance - result.startBalance)}
-                      </span>
-                    </p>
                   </div>
                 </div>
               </div>

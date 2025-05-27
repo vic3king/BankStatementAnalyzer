@@ -42,7 +42,14 @@ const FileUploader = ({ className, setFiles, files }: IFileUploader) => {
       toast.error('Only PDF files are allowed for bank statement parsing');
       return;
     }
-    setFiles([...files, ...selectedFiles]);
+
+    const filesWithProgress = selectedFiles.map(file => {
+      const fileWithProgress = file as any;
+      fileWithProgress.originalFileName = file.name;
+      return fileWithProgress;
+    });
+
+    setFiles([...files, ...filesWithProgress]);
   };
 
   return (

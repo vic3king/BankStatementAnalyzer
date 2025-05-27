@@ -1,13 +1,13 @@
 # Bank Statement Analyzer
 
-A full-stack Monrepo application for analyzing bank statement PDF files using AI.
+A full-stack Monorepo application for analyzing bank statement PDF files using AI-powered parsing and data extraction.
 
-## Project Structure
+## Screenshots
 
-This project is organized into separate modules, each with its own documentation:
+### Upload Interface
+![Screenshot 1](./screenshots/Screenshot%202025-05-27%20at%2011.11.38.png)
 
-- **[Backend](./backend/README.md)** - NestJS API server with PDF parsing and queue processing
-- **[Frontend](./frontend/README.md)** - React application for file upload and results display
+![Screenshot 2](./screenshots/Screenshot%202025-05-27%20at%2011.11.59.png)
 
 ## Getting Started
 

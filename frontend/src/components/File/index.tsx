@@ -1,17 +1,20 @@
 import { AiOutlineLoading3Quarters } from "react-icons/ai"
 import { FaRegFileAlt, FaCheckCircle, FaExclamationCircle } from "react-icons/fa"
-import { SlOptions } from "react-icons/sl"
-import { getFileExt, truncateFileName } from "../../lib/utilities"
+import { HiOutlineRefresh } from "react-icons/hi"
+import { getFileExt, truncateFileName, getDisplayFileName } from "../../lib/utilities"
 import { RxText } from "react-icons/rx"
-import { UploadJob } from "../../types/types"
+import { UploadJob, FileWithProgress } from "../../types/types"
 
 interface IFile {
-  fileName: string
+  file?: FileWithProgress
+  fileName?: string
   job?: UploadJob
   uploadStatus?: 'uploading' | 'queued' | 'processing' | 'completed' | 'failed'
 }
 
-const File = ({ fileName, job, uploadStatus }: IFile) => {
+const File = ({ file, fileName, job, uploadStatus }: IFile) => {
+  const displayFileName = getDisplayFileName(file, job) || fileName || "Unknown file";
+
   const getStatusIcon = () => {
     if (uploadStatus === 'uploading' || job?.status === 'active') {
       return (
@@ -35,7 +38,7 @@ const File = ({ fileName, job, uploadStatus }: IFile) => {
       )
     }
 
-    return <SlOptions />
+    return <HiOutlineRefresh className="text-gray-500" />
   }
 
   const getStatusText = () => {
@@ -51,11 +54,11 @@ const File = ({ fileName, job, uploadStatus }: IFile) => {
     <div className="p-6 bg-gray-100 flex justify-between items-center rounded">
       <div className="flex gap-2 items-center flex-1">
         <div className="p-1 border rounded border-gray-200">
-          {getFileExt(fileName) === 'pdf' ? <FaRegFileAlt /> : <RxText />}
+          {getFileExt(displayFileName) === 'pdf' ? <FaRegFileAlt /> : <RxText />}
         </div>
         <div className="flex-1">
-          <p className="text-sm text-gray-900" title={fileName}>
-            {truncateFileName(fileName)}
+          <p className="text-sm text-gray-900" title={displayFileName}>
+            {truncateFileName(displayFileName)}
           </p>
           {getStatusText() && (
             <p className="text-xs text-gray-500 mt-1">{getStatusText()}</p>

@@ -13,3 +13,9 @@ export const truncateFileName = (name: string, maxLength: number = 30) => {
   );
   return `${truncatedName}...${extension}`;
 };
+
+export const getDisplayFileName = (file?: any, job?: any): string => {
+  return (
+    file?.originalFileName || file?.name || job?.fileName || "Unknown file"
+  );
+};

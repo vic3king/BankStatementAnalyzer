@@ -56,9 +56,7 @@ export class PdfParserProcessor {
 
       return result;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      this.logger.error(`Failed to process PDF job ${job.id}: ${errorMessage}`);
+      this.logger.error(error);
       throw error;
     }
   }
