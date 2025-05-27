@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import * as pdfParse from 'pdf-parse';
+import pdfParse from 'pdf-parse';
 import { ParsedStatementDto } from './dto/parsed-statement.dto';
 import { LLM_SERVICE, LLMServiceInterface } from '../llm/llm.interface';
 import {
