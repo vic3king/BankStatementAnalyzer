@@ -18,7 +18,7 @@ pnpm dev
 bun dev
 ```
 
-![Empty View State](screenshots/emptygit -view.png)
-![Entity View](screenshots/results-view.png)
+![Empty View State](../screenshots/empty-view.png)
+![Results View](../screenshots/results-view.png)
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
