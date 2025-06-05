@@ -12,7 +12,7 @@ Please refer to the individual README files in each folder for specific setup an
 ## Screenshots
 
 ### Empty Upload Interface
-![Empty View State](./screenshots/gitempty-view.png)
+![Empty View State](./screenshots/empty-view.png)
 
 ### Results View with Processed Documents
 ![Results View](./screenshots/results-view.png)
