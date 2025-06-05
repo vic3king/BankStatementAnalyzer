@@ -1,4 +1,4 @@
-# Bank Statement Analyzer
+# AI Bank Statement Analyzer
 
 A full-stack Monorepo application for analyzing bank statement PDF files using AI-powered parsing and data extraction.
 
@@ -11,7 +11,8 @@ Please refer to the individual README files in each folder for specific setup an
 
 ## Screenshots
 
-### Upload Interface
-![Screenshot 1](./screenshots/Screenshot%202025-05-27%20at%2011.11.38.png)
+### Empty Upload Interface
+![Empty View State](./screenshots/gitempty-view.png)
 
-![Screenshot 2](./screenshots/Screenshot%202025-05-27%20at%2011.11.59.png)
+### Results View with Processed Documents
+![Results View](./screenshots/results-view.png)
