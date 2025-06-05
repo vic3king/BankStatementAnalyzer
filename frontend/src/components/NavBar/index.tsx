@@ -3,11 +3,11 @@ const NavBar = () => {
     <div className="px-6 py-4 flex justify-between items-center border-b">
       <div className="flex gap-2 items-center">
         <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center">
-          <span className="text-white font-bold text-lg">A</span>
+          <span className="text-white font-bold text-xs">AI</span>
         </div>
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Arva AI</h1>
-          <p className="text-xs text-gray-500">Bank Statement Analyzer</p>
+          <h1 className="text-xl font-bold text-gray-900">AI Bank Statement Analyzer</h1>
+          <p className="text-xs text-gray-500">Intelligent Document Processing</p>
         </div>
       </div>
       <div>

@@ -1,5 +1,5 @@
 {
-  "name": "query-api",
+  "name": "ai-bank-statement-analyzer-backend",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
